@@ -24,12 +24,6 @@
     dbPromise.then(db => {
         const transaction = db.transaction('coins', 'readwrite')
         const store = transaction.objectStore('coins')
-        const query = store.get(2)
-
-        query.addEventListener('success', event => {
-            console.log(event.target)
-        })
-
         store.put({ name: 'Bitcoin' })
 
         store.openCursor().addEventListener('success', event => {
