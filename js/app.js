@@ -20,8 +20,8 @@ const methods = method => {
     }
 } 
 
-const getAllStores = document.querySelector('[data-button="get-all-stores"]')
-const addRandomValue = document.querySelector('[data-button="add-random-value"]')
+const getAllStores = document.querySelector('[data-button="get-all-object-stores"]')
+const addRandomValue = document.querySelector('[data-button="add-random-store"]')
 
 
 const dbPromise = new Promise((resolve, reject) => {
@@ -71,9 +71,13 @@ addRandomValue.addEventListener('click', async () => {
     const store = transaction.objectStore('coins')
     const query = store.put({...randomItem})
     
-    query.addEventListener('success', () => log('A new item has been added succefully'))
-    query.addEventListener('error', (event) => log('An error occurred.', event))
+    query.addEventListener('success', () => 
+        log('A new item has been added succefully'))
 
-    transaction.addEventListener('complete', (event) => log('The transaction has been completed succefully', event))
-    
+    query.addEventListener('error', (event) => 
+        log('An error occurred.', event))
+
+    transaction.addEventListener('complete', () => 
+        log('The transaction has been completed succefully'))
+
 })
