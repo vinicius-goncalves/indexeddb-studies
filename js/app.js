@@ -23,7 +23,6 @@ const methods = method => {
 const getAllStores = document.querySelector('[data-button="get-all-object-stores"]')
 const addRandomValue = document.querySelector('[data-button="add-random-store"]')
 
-
 const dbPromise = new Promise((resolve, reject) => {
 
     request.addEventListener('success', (event) => {
@@ -44,20 +43,31 @@ const dbPromise = new Promise((resolve, reject) => {
 
 getAllStores.addEventListener('click', () => {
     dbPromise.then(db => {
-        const transaction = db.transaction('coins', 'readwrite')
+
+        const transaction = db.transaction('coins', 'readonly')
         const store = transaction.objectStore('coins')
         const openCursor = store.openCursor()
+        const query = store.getAll()
 
-        openCursor.addEventListener('success', (event) => {
-
-            const { ['result']: cursor } = event.target
-            if(!cursor) { return }
-
-            const coin = cursor.value
-            log(coin)
-            cursor.continue()
-
+        query.addEventListener('success', event => {
+            const { ['result']: total } = event.target
+            if(total.length === 0) {
+                return methods('log').then(log => log("There isn't any objects store."))
+            }
+       
+            openCursor.addEventListener('success', (event) => {
+    
+                const { ['result']: cursor } = event.target
+                
+                if(!cursor) { return }
+    
+                const coin = cursor.value
+                methods('log').then(log => log(coin))
+                cursor.continue()
+    
+            })
         })
+
     })
 })
 
